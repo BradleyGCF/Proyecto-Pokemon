@@ -7,7 +7,7 @@ const getApiPokemon = async (url) => {
         const apiNext = await axios.get(apiResults.data.next);
         const allPokemons = await apiResults.data.results.concat(apiNext.data.results);
         for (let poke of allPokemons) {
-            let url = await axios.get(p.url);
+            let url = await axios.get(poke.url);
             delete poke.url;
             poke.id = url.data.id;
             poke.img = url.data.sprites.front_default;
