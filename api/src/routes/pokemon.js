@@ -2,55 +2,93 @@ const { Router } = require("express");
 const { Pokemon, Type } = require("../db");
 const router = Router();
 
-router.post("/", async (req, res) => {
-  let { name, img, hp, strength, defense, speed, height, weight, types } =
-    req.body;
 
-  let tiposEnArray = types.split(", ");
+router.post('/pokemon', async (req, res) => {
+  let {
+      name,
+      hp,
+      strength,
+      defense,
+      speed,
+      height,
+      weight,
+      img,
+      types
+  } = req.body
 
-  try {
-    if (
-      !name ||
-      !hp ||
-      !strength ||
-      !defense ||
-      !speed ||
-      !height ||
-      !weight ||
-      !types
-    ) {
-      return res.status(400).send("Faltan parametros");
-    }
+  let pokemonCreated = await Pokemon.create({
+      name,
+      hp,
+      strength,
+      defense,
+      speed,
+      height,
+      weight,
+      img
+ })
 
-    const findPokemon = await Pokemon.findOne({ where: { name: name } });
-    if (findPokemon) {
-      return res.status(400).send("El nombre ya esta en uso");
-    }
-
-    let id = Math.floor(Math.random() * 1234567);
-
-    let [createPoke, exist] = await Pokemon.findOrCreate({
-      where: {
-        id: id,
-        img,
-        name,
-        hp,
-        strength,
-        defense,
-        speed,
-        height,
-        weight,
-      },
-    });
-
-    tiposEnArray.forEach(async (t) => {
-      let postTypes = await Type.findAll({ where: { name: t } });
-      await createPoke.addType(postTypes);
-    });
-
-    res.json(createPoke);
-  } catch (error) {
-    console.log(error);
-  }
+  let typesDb = await types.findAll({ where: {name : types} })
+   pokemonCreated.addTypes(typesDb)
+   
+   res.send('Pokemon creado con exito')
+      
 });
+
+
 module.exports = router;
+
+
+
+
+
+// router.post("/pokemon", async (req, res) => {
+  //   let { name, img, hp, strength, defense, speed, height, weight, types } =
+  //     req.body;
+  // console.log(name);
+  //   let tiposEnArray = types.split(", ");
+  
+  //   try {
+  //     if (
+  //       !name ||
+  //       !hp ||
+  //       !strength ||
+  //       !defense ||
+  //       !speed ||
+  //       !height ||
+  //       !weight ||
+  //       !types
+  //     ) {
+  //       return res.status(400).send("Faltan parametros");
+  //     }
+  
+  //     const findPokemon = await Pokemon.findOne({ where: { name: name } });
+  //     if (findPokemon) {
+  //       return res.status(400).send("El nombre ya esta en uso");
+  //     }
+  
+  //     let id = Math.floor(Math.random() * 1234567);
+  
+  //     let createPoke = await Pokemon.create({
+  //       where: {
+  //         id: id,
+  //         img,
+  //         name,
+  //         hp,
+  //         strength,
+  //         defense,
+  //         speed,
+  //         height,
+  //         weight,
+  //       },
+  //     });
+  
+  //     tiposEnArray.forEach(async (t) => {
+  //       let postTypes = await Type.findAll({ where: { name: t } });
+  //       await createPoke.addType(postTypes);
+  //     });
+  
+  //     res.json(createPoke);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });

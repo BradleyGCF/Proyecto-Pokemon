@@ -14,6 +14,6 @@ const router = Router();
 router.use("/pokemon", postPoke);
 router.use("/types", types);
 router.use("/pokemons", allInfo);
-router.get("/:id", getByID);
+router.get("/pokemons/:id", getByID);
 
 module.exports = router;

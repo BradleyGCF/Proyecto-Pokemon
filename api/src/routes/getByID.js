@@ -6,7 +6,7 @@ const allPokemons = require("../Functions/Pokemon/allInfo");
 
 // Ruta para acceder a cada pokemon por su ID..
 
-router.get("/:id", async (req, res) => {
+router.get("/pokemons/:id", async (req, res) => {
      const  id  = req.params.id;
 
     console.log(id);
